@@ -1,4 +1,4 @@
-package com.example.movieappmad24
+package com.example.animalApp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

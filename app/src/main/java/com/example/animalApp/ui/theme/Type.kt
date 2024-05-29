@@ -1,4 +1,4 @@
-package com.example.movieappmad24.ui.theme
+package com.example.animalApp.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
