@@ -8,11 +8,11 @@ kotlin {
 }
 
 android {
-    namespace = "com.example.movieappmad24"
+    namespace = "com.example.animalApp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.movieappmad24"
+        applicationId = "com.example.animalApp"
         minSdk = 28
         targetSdk = 34
         versionCode = 1
