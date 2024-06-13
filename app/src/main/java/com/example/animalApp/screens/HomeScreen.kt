@@ -1,13 +1,18 @@
 package com.example.animalApp.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,12 +24,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.animalApp.R
+import com.example.animalApp.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,24 +47,18 @@ fun HomeScreen(navController: NavController) {
                     titleContentColor = MaterialTheme.colorScheme.primary
                 )
             )
-            Card (modifier = Modifier
-                .width(500.dp)
-                .height(500.dp)
-                .padding(20.dp)
-                .absoluteOffset(30.dp,100.dp)
-            ){
-                Image(painter = painterResource(id = R.drawable.hund),
-                    contentDescription = "Doggy",
-                    contentScale = ContentScale.FillWidth)
-            }
         },
+        bottomBar = {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
 
-            bottomBar = {
             NavigationBar {
                 NavigationBarItem(
                     label = { Text("Home") },
-                    selected = true,
-                    onClick = { /*TODO*/ },
+                    selected = currentDestination?.hierarchy?.any {
+                        it.route == Screen.HomeScreen.route
+                    } == true,
+                    onClick = { navController.navigate(Screen.HomeScreen.route) },
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Home,
@@ -65,18 +68,80 @@ fun HomeScreen(navController: NavController) {
                 )
                 NavigationBarItem(
                     label = { Text("Add Pet") },
-                    selected = false,
-                    onClick = { /*TODO*/ },
+                    selected = currentDestination?.hierarchy?.any {
+                        it.route == Screen.AddPetScreen.route
+                    } == true,
+                    onClick = { navController.navigate(Screen.AddPetScreen.route) },
                     icon = {
                         Icon(
-                            imageVector = Icons.Filled.Star,
-                            contentDescription = "Go to watchlist"
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "Add Pet"
+                        )
+                    }
+                )
+                NavigationBarItem(
+                    label = { Text("Health data") },
+                    selected = currentDestination?.hierarchy?.any {
+                        it.route == Screen.VetInfoScreen.route
+                    } == true,
+                    onClick = { navController.navigate(Screen.VetInfoScreen.route) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Favorite,
+                            contentDescription = "Health data"
+                        )
+                    }
+                )
+                NavigationBarItem(
+                    label = { Text("Appointments") },
+                    selected = currentDestination?.hierarchy?.any {
+                        it.route == Screen.CalendarScreen.route
+                    } == true,
+                    onClick = { navController.navigate(Screen.CalendarScreen.route) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.DateRange,
+                            contentDescription = "Appointments"
                         )
                     }
                 )
             }
         }
-    ) {
-        it
+    ) { innerPadding ->
+        val scrollState = rememberScrollState()
+        Column(
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text =
+                """
+                    Welcome to your Animal Manager App! 
+                    
+                    Let's get started by adding your pet's data so we can help you organize everything around your darlings. Just press the Plus-Button below!
+
+                    You're also free to change the appearance of this App in the settings.
+                    
+
+                """.trimIndent(),
+            )
+            Card(
+                modifier = Modifier
+                    .width(250.dp)
+                    .height(350.dp)
+                    .padding(10.dp)
+            ) {
+                Image(
+                    modifier = Modifier
+                        .padding(10.dp),
+                    painter = painterResource(id = R.drawable.hund),
+                    contentDescription = "Doggy",
+                    contentScale = ContentScale.FillWidth
+                )
+            }
+        }
     }
 }
