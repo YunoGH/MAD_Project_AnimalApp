@@ -3,9 +3,7 @@ package com.example.animalApp.screens
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -16,38 +14,28 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.animalApp.AppointmentForm
 import com.example.animalApp.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarScreen(navController: NavController) {
-    var selectedAppointmentType by remember { mutableStateOf("Vet") }
-    var appointmentDate by remember { mutableStateOf("") }
-    var appointmentDetails by remember { mutableStateOf("") }
-
-    val appointmentTypes = listOf("Vet", "Leisure")
-
+fun CalendarScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -137,62 +125,7 @@ fun CalendarScreen(navController: NavController) {
                 """.trimIndent(),
             )
 
-            Text(
-                "Add Appointment",
-                style = MaterialTheme.typography.headlineMedium
-            ) //// arrange size!
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                appointmentTypes.forEach { type ->
-                    Button(
-                        onClick = { selectedAppointmentType = type },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (selectedAppointmentType == type) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.tertiaryContainer,
-                        )
-                    ) {
-                        Text(type)
-                    }
-                }
-            }
-
-            OutlinedTextField(
-                value = appointmentDate,
-                onValueChange = { appointmentDate = it },
-                label = { Text("Date") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            OutlinedTextField(
-                value = appointmentDetails,
-                onValueChange = { appointmentDetails = it },
-                label = { Text("Details") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Button(
-                onClick = {
-                    // ADD DATABASE with Room to store UserInputs !!!!
-                },
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Text("Add Appointment")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text("Appointments", style = MaterialTheme.typography.headlineMedium)
-
-            // List of appointments (later filled with DB-Data)
-            val appointments = listOf(
-                "Vet Appointment on 12/06/2023",
-                "Leisure Appointment on 15/06/2023"
-            )
-            appointments.forEach { appointment ->
-                Text(appointment, modifier = Modifier.padding(4.dp))
-            }
+            AppointmentForm()
 
             Spacer(modifier = Modifier.height(16.dp))
 

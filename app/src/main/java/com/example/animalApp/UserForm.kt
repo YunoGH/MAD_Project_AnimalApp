@@ -13,33 +13,39 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
+import com.example.animalApp.viewmodels.MainViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.animalApp.data.UserInfo
 
 @Composable
-fun UserForm(brush: Brush) {
-    var name by remember { mutableStateOf(TextFieldValue()) }
-    var age by remember { mutableStateOf(TextFieldValue()) }
-    var animalType by remember { mutableStateOf(TextFieldValue()) }
-    var race by remember { mutableStateOf(TextFieldValue()) }
-    var color by remember { mutableStateOf(TextFieldValue()) }
-    var sex by remember { mutableStateOf(TextFieldValue()) }
-    var eyeColor by remember { mutableStateOf(TextFieldValue()) }
+fun UserForm(viewModel: MainViewModel = viewModel()) {
+    var name by remember { mutableStateOf("") }
+    var age by remember { mutableStateOf("") }
+    var animalType by remember { mutableStateOf("") }
+    var race by remember { mutableStateOf("") }
+    var color by remember { mutableStateOf("") }
+    var sex by remember { mutableStateOf("") }
+    var eyeColor by remember { mutableStateOf("") }
+    var dateOfBirth by remember { mutableStateOf("") }
     var photoUri by remember { mutableStateOf<Uri?>(null)}
+
+    val users by viewModel.allUsers.collectAsState()
 
     // Image launcher
     val imgLauncher = rememberLauncherForActivityResult(
@@ -109,6 +115,13 @@ fun UserForm(brush: Brush) {
             modifier = Modifier.fillMaxWidth()
         )
 
+        OutlinedTextField(
+            value = dateOfBirth,
+            onValueChange = { dateOfBirth = it },
+            label = { Text("Date of Birth") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
@@ -139,11 +152,30 @@ fun UserForm(brush: Brush) {
 
         Button(
             onClick = {
+                      val user = UserInfo(
+                          name = name,
+                          age = age.toIntOrNull() ?: 0,
+                          animalType = animalType,
+                          race = race.takeIf { it.isNotEmpty() },
+                          color = color,
+                          sex = sex,
+                          eyeColor = eyeColor,
+                          dateOfBirth = dateOfBirth,
+                          photoUri = photoUri?.toString()
+                      )
+                viewModel.addUser(user)
                 // Handle form submission here
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("Submit")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Display saved users
+        Text("Saved Users:", style = MaterialTheme.typography.headlineMedium)
+        users.forEach {user ->
+            Text(user.name)
         }
     }
 }
