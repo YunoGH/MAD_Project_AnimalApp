@@ -17,9 +17,11 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,16 +32,21 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.animalApp.data.Appointment
+import com.example.animalApp.data.Pet
+import com.example.animalApp.viewmodels.MainViewModel
 import java.util.Calendar
 
 @Composable
-fun HealthDataForm(brush: Brush) {
+fun HealthDataForm(viewModel: MainViewModel = viewModel()) {
     var birthDate by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     var selectedVaccine by remember { mutableStateOf("") }
     val vaccines = listOf("Rabies", "Parvovirus", "Distemper", "Hepatitis")
-    var animalType by remember { mutableStateOf(TextFieldValue()) }
-    var race by remember { mutableStateOf(TextFieldValue()) }
+    var animalType by remember { mutableStateOf("") }
+    var race by remember { mutableStateOf("") }
+    val pets by viewModel.allPets.collectAsState()
 
     // Date picker dialog
     val context = LocalContext.current
@@ -121,11 +128,25 @@ fun HealthDataForm(brush: Brush) {
 
         Button(
             onClick = {
+                val pet = Pet(
+                    animalType = animalType,
+                    race = race,
+                    vaccines = selectedVaccine
+                )
+                viewModel.addPet(pet)
                 // Handle form submission here
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("Submit")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Display saved pet
+        Text("Saved Pets", style = MaterialTheme.typography.headlineMedium)
+
+        pets.forEach { pet ->
+            Text("${pet.animalType} - ${pet.race}: ${pet.vaccines}")
         }
     }
 }
