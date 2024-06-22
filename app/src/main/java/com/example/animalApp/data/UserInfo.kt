@@ -25,3 +25,11 @@ data class Appointment(
     val details: String
 )
 
+@Entity(tableName = "pets")
+data class Pet(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val animalType: String,
+    val race: String,
+    val vaccines: String
+)
+

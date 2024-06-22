@@ -19,3 +19,12 @@ interface AppointmentDao {
     @Query("SELECT * FROM appointments")
     suspend fun getAllAppointments(): List<Appointment>
 }
+
+@Dao
+interface PetDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPet(pet: Pet)
+
+    @Query("SELECT * FROM pets")
+    suspend fun getAllPets(): List<Pet>
+}
