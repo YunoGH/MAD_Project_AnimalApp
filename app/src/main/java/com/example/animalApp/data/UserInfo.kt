@@ -22,6 +22,7 @@ data class Appointment(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val appointmentType: String,
     val date: String,
+    val time: String,
     val details: String
 )
 

@@ -145,7 +145,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
                 val appointment = Appointment(
                     appointmentType = selectedAppointmentType,
                     date = formattedDate,
-                    //time = formattedTime,
+                    time = formattedTime,
                     details = appointmentDetails
                 )
                 viewModel.addAppointment(appointment)
@@ -161,7 +161,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
         Text("Appointments", style = MaterialTheme.typography.headlineMedium)
 
         appointments.forEach { appointment ->
-            Text("${appointment.appointmentType} - ${appointment.date}: ${appointment.details}")
+            Text("${appointment.appointmentType} - ${appointment.date}(${appointment.time}): ${appointment.details}")
         }
     }
 
