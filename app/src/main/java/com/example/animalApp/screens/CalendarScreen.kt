@@ -114,7 +114,7 @@ fun CalendarScreen(navController: NavHostController, viewModel: SettingsViewMode
                     NavigationBarItem(
                         label = { Text("Settings") },
                         selected = currentDestination?.hierarchy?.any {
-                            it.route == Screen.CalendarScreen.route
+                            it.route == Screen.SettingsScreen.route
                         } == true,
                         onClick = { navController.navigate(Screen.SettingsScreen.route) },
                         icon = {
