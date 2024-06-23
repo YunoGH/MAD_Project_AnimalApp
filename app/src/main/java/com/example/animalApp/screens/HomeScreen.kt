@@ -3,6 +3,7 @@ package com.example.animalApp.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -39,13 +40,15 @@ import com.example.animalApp.R
 import com.example.animalApp.navigation.Screen
 import com.example.animalApp.ui.theme.AnimalAppTheme
 import com.example.animalApp.viewmodel.SettingsViewModel
+import com.example.animalApp.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: SettingsViewModel = viewModel()) {
-    val isDarkMode by viewModel.isDarkMode.collectAsState()
+fun HomeScreen(navController: NavController, viewModel: MainViewModel = viewModel()) {
+    //val isDarkMode by viewModel.isDarkMode.collectAsState()
+    val users by viewModel.allUsers.collectAsState()
 
-    AnimalAppTheme(darkTheme = isDarkMode) {
+    AnimalAppTheme(/*darkTheme = isDarkMode*/) {
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -146,6 +149,19 @@ fun HomeScreen(navController: NavController, viewModel: SettingsViewModel = view
                         You're also free to change the appearance of this App in the settings.
                     """.trimIndent(),
                 )
+                Text("Saved Pets:", style = MaterialTheme.typography.headlineMedium)
+
+                users.forEach { user ->
+                    Text("Pets Name: " + user.name)
+                    Text("Pets age: " + user.age.toString())
+                    Text("Animal Type: " + user.animalType)
+                    Text("Race: " + user.race ?: "Unknown")
+                    Text("Color: " + user.color)
+                    Text("Sex: " + user.sex)
+                    Text("Eye Color: " + user.eyeColor)
+                    Text("Birthday: " + user.dateOfBirth)
+                    Text("Pet Photo: ")
+                }
                 Card(
                     modifier = Modifier
                         .width(250.dp)
