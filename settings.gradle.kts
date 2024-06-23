@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MovieAppMAD24"
+rootProject.name = "animalApp"
 include(":app")
  
