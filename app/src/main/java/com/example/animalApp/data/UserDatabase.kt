@@ -21,11 +21,11 @@ abstract class UserDatabase : RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 // Create the 'pets' table
                 database.execSQL("""
-                    CREATE TABLE IF NOT EXISTS `pets` (
-                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                        `animalType` TEXT NOT NULL,
-                        `race` TEXT NOT NULL,
-                        `vaccines` TEXT NOT NULL
+                    CREATE TABLE IF NOT EXISTS pets (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        animalType TEXT NOT NULL,
+                        race TEXT NOT NULL,
+                        vaccines TEXT NOT NULL
                     )
                 """.trimIndent())
             }
@@ -33,16 +33,28 @@ abstract class UserDatabase : RoomDatabase() {
 
         private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                // Create the 'pets' table
+                // Create a new table with the expected schema
                 database.execSQL("""
-                    CREATE TABLE IF NOT EXISTS `appointments` (
-                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                        `appointmentType` TEXT NOT NULL,
-                        `date` TEXT NOT NULL,
-                        `time` TEXT NOT NULL,
-                        `details` TEXT NOT NULL
+                    CREATE TABLE IF NOT EXISTS appointments_new (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        appointmentType TEXT NOT NULL,
+                        date TEXT NOT NULL,
+                        time TEXT NOT NULL,
+                        details TEXT NOT NULL
                     )
                 """.trimIndent())
+
+                // Copy data from the old table to the new table, setting default values for new columns
+                database.execSQL("""
+                    INSERT INTO appointments_new (id, appointmentType, date, details, time)
+                    SELECT id, appointmentType, date, details, '' as time FROM appointments
+                """.trimIndent())
+
+                // Drop the old table
+                database.execSQL("DROP TABLE appointments")
+
+                // Rename the new table to the old table's name
+                database.execSQL("ALTER TABLE appointments_new RENAME TO appointments")
             }
         }
 
@@ -54,7 +66,7 @@ abstract class UserDatabase : RoomDatabase() {
                     "user_database"
                 )
                     //.addMigrations(MIGRATION_1_2)
-                    .addMigrations(MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
                 INSTANCE = instance
                 instance
