@@ -24,32 +24,37 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _allPets = MutableStateFlow<List<Pet>>(emptyList())
     val allPets: StateFlow<List<Pet>> = _allPets
+
     init {
         viewModelScope.launch {
-            _allUsers.value = userDao.getAllUsers()
-            _allAppointments.value = appointmentDao.getAllAppointments()
-            _allPets.value = petDao.getAllPets()
+            refreshData()
         }
+    }
+
+    private suspend fun refreshData() {
+        _allUsers.value = userDao.getAllUsers()
+        _allAppointments.value = appointmentDao.getAllAppointments()
+        _allPets.value = petDao.getAllPets()
     }
 
     fun addUser(userInfo: UserInfo) {
         viewModelScope.launch {
             userDao.insertUser(userInfo)
-            _allUsers.value = userDao.getAllUsers()
+            refreshData()
         }
     }
 
     fun addAppointment(appointment: Appointment) {
         viewModelScope.launch {
             appointmentDao.insertAppointment(appointment)
-            _allAppointments.value = appointmentDao.getAllAppointments()
+            refreshData()
         }
     }
 
     fun addPet(pet: Pet) {
         viewModelScope.launch {
             petDao.insertPet(pet)
-            _allPets.value = petDao.getAllPets()
+            refreshData()
         }
     }
 
