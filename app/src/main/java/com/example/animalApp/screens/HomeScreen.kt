@@ -44,11 +44,11 @@ import com.example.animalApp.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: MainViewModel = viewModel()) {
-    //val isDarkMode by viewModel.isDarkMode.collectAsState()
+fun HomeScreen(navController: NavController, viewModel: MainViewModel = viewModel(), viewModel1: SettingsViewModel = viewModel()) {
+    val isDarkMode by viewModel1.isDarkMode.collectAsState()
     val users by viewModel.allUsers.collectAsState()
 
-    AnimalAppTheme(/*darkTheme = isDarkMode*/) {
+    AnimalAppTheme(darkTheme = isDarkMode) {
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
