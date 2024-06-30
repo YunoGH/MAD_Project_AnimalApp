@@ -31,10 +31,10 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.animalApp.viewmodels.MainViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.animalApp.data.UserInfo
+import com.example.animalApp.data.PetInfo
 
 @Composable
-fun UserForm(viewModel: MainViewModel = viewModel()) {
+fun PetForm(viewModel: MainViewModel = viewModel()) {
     var name by remember { mutableStateOf("") }
     var age by remember { mutableStateOf("") }
     var animalType by remember { mutableStateOf("") }
@@ -45,7 +45,7 @@ fun UserForm(viewModel: MainViewModel = viewModel()) {
     var dateOfBirth by remember { mutableStateOf("") }
     var photoUri by remember { mutableStateOf<Uri?>(null)}
 
-    val users by viewModel.allUsers.collectAsState()
+    val pets by viewModel.allPetInfo.collectAsState()
 
     // Image launcher
     val imgLauncher = rememberLauncherForActivityResult(
@@ -152,7 +152,7 @@ fun UserForm(viewModel: MainViewModel = viewModel()) {
 
         Button(
             onClick = {
-                      val user = UserInfo(
+                      val pet = PetInfo(
                           name = name,
                           age = age.toIntOrNull() ?: 0,
                           animalType = animalType,
@@ -163,7 +163,7 @@ fun UserForm(viewModel: MainViewModel = viewModel()) {
                           dateOfBirth = dateOfBirth,
                           photoUri = photoUri?.toString()
                       )
-                viewModel.addUser(user)
+                viewModel.addPetInfo(pet)
                 // Handle form submission here
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -173,9 +173,9 @@ fun UserForm(viewModel: MainViewModel = viewModel()) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Display saved users
-        Text("Saved Users:", style = MaterialTheme.typography.headlineMedium)
-        users.forEach {user ->
-            Text(user.name)
+        Text("Saved Pets:", style = MaterialTheme.typography.headlineMedium)
+        pets.forEach {pet ->
+            Text(pet.name)
         }
     }
 }

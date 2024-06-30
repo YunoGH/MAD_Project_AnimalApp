@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
@@ -26,6 +28,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -36,12 +41,18 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.animalApp.navigation.Screen
 import com.example.animalApp.ui.theme.AnimalAppTheme
 import com.example.animalApp.viewmodel.SettingsViewModel
+import com.example.animalApp.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = viewModel()) {
+fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = viewModel(), viewModel1: MainViewModel = viewModel()) {
     // Collect the current state of isDarkMode from the SettingsViewModel
     val isDarkMode by viewModel.isDarkMode.collectAsState()
+    var ownerName by remember { mutableStateOf("") }
+    var ownerPassword by remember { mutableStateOf("") }
+    val logins by viewModel1.allLogins.collectAsState()
+    var iconClicked = false
+
 
     AnimalAppTheme(darkTheme = isDarkMode) {
         Scaffold(
@@ -157,6 +168,42 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                         onCheckedChange = { viewModel.toggleDarkMode() },
                         modifier = Modifier.padding(end = 8.dp)
                     )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Delete Userprofile",
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 8.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp)) // Adding space between text and switch
+                    IconButton(modifier = Modifier.size(75.dp)
+                        .padding(start = 10.dp, top = 1.dp, bottom = 1.dp),
+                        onClick = {
+                            iconClicked = true
+                            logins.forEach { login ->
+                        val loginToDelete = logins.firstOrNull {
+                            it.ownerName == login.ownerName && it.ownerPassword == login.ownerPassword
+                        }
+                        loginToDelete?.let { viewModel1.deleteLogin(it) }
+                    }
+                            viewModel1.deleteAllPetInfo()
+                            viewModel1.deleteAllPetInfo()
+                            viewModel1.deleteAllAppointments()
+                            navController.navigate(Screen.LoginScreen.route)
+
+                        }) {
+                        Icon(
+                            modifier = Modifier.size(45.dp),
+                            tint = if (iconClicked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
+                            imageVector = Icons.Filled.AccountCircle,
+                            contentDescription = "delete Account"
+                        )
+                    }
+
                 }
             }
         }

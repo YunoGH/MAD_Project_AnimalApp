@@ -3,8 +3,16 @@ package com.example.animalApp.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "user_info")
-data class UserInfo(
+
+@Entity(tableName = "login_info")
+data class LoginInfo(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val ownerName: String,
+    val ownerPassword: String
+)
+
+@Entity(tableName = "pet_info")
+data class PetInfo(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val age: Int,
@@ -27,8 +35,8 @@ data class Appointment(
 
 )
 
-@Entity(tableName = "pets")
-data class Pet(
+@Entity(tableName = "vet_info")
+data class VetInfo(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val animalType: String,
     val race: String,

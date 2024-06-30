@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.animalApp.screens.AddPetScreen
 import com.example.animalApp.screens.CalendarScreen
 import com.example.animalApp.screens.HomeScreen
+import com.example.animalApp.screens.LoginScreen
 import com.example.animalApp.screens.SettingsScreen
 import com.example.animalApp.screens.VetInfoScreen
 
@@ -15,7 +16,11 @@ fun Navigation() {
     val navController = rememberNavController()
 
     NavHost(navController = navController,
-        startDestination = Screen.HomeScreen.route) {
+        startDestination = Screen.LoginScreen.route) {
+        composable(route = Screen.LoginScreen.route) {
+            LoginScreen(navController = navController)
+        }
+
         composable(route = Screen.HomeScreen.route) {
             HomeScreen(navController = navController)
         }

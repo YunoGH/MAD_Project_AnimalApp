@@ -2,13 +2,16 @@ package com.example.animalApp.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
@@ -18,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -27,24 +31,30 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.animalApp.PetForm
 import com.example.animalApp.R
-import com.example.animalApp.UserForm
 import com.example.animalApp.navigation.Screen
 import com.example.animalApp.ui.theme.AnimalAppTheme
 import com.example.animalApp.viewmodel.SettingsViewModel
+import com.example.animalApp.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddPetScreen(navController: NavController, viewModel: SettingsViewModel = viewModel()) {
-    val isDarkMode by viewModel.isDarkMode.collectAsState()
+fun AddPetScreen(navController: NavController, viewModel: MainViewModel = viewModel(), viewModel1: SettingsViewModel = viewModel()) {
+    val isDarkMode by viewModel1.isDarkMode.collectAsState()
+    val pets by viewModel.allPetInfo.collectAsState()
+    val logins by viewModel.allLogins.collectAsState()
+
 
     AnimalAppTheme(darkTheme = isDarkMode) {
         Scaffold(
@@ -54,7 +64,23 @@ fun AddPetScreen(navController: NavController, viewModel: SettingsViewModel = vi
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         titleContentColor = MaterialTheme.colorScheme.primary
-                    )
+                    ),
+                    actions = {
+                        Box(contentAlignment = Alignment.Center) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Icon(
+                                    imageVector = Icons.Filled.AccountCircle,
+                                    contentDescription = "Account",
+                                    Modifier.padding(top = 12.dp, bottom = 0.dp, end = 16.dp))
+
+                                logins.forEach { login ->
+                                    Text(text = login.ownerName,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier.padding(bottom = 9.dp, top = 0.dp, end = 16.dp))
+                                }
+                            }
+                        }
+                    }
                 )
             },
             bottomBar = {
@@ -147,7 +173,16 @@ fun AddPetScreen(navController: NavController, viewModel: SettingsViewModel = vi
     
                     """.trimIndent(),
                 )
-                UserForm()
+                PetForm()
+                pets.forEach { pet ->
+                    Column(modifier = Modifier.padding(bottom = 16.dp)) {
+                        Text(
+                            text = "PETS NAME: ${pet.name}",
+                            style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                }
                 Card(
                     modifier = Modifier
                         .width(150.dp)

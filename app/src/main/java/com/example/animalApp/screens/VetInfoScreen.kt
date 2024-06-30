@@ -2,6 +2,7 @@ package com.example.animalApp.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
@@ -27,6 +29,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -40,20 +43,39 @@ import com.example.animalApp.R
 import com.example.animalApp.navigation.Screen
 import com.example.animalApp.ui.theme.AnimalAppTheme
 import com.example.animalApp.viewmodel.SettingsViewModel
+import com.example.animalApp.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VetInfoScreen(navController: NavController, viewModel: SettingsViewModel = viewModel()) {
+fun VetInfoScreen(navController: NavController, viewModel: SettingsViewModel = viewModel(), viewModel1: MainViewModel = viewModel()) {
     val isDarkMode by viewModel.isDarkMode.collectAsState()
+    val logins by viewModel1.allLogins.collectAsState()
 
     AnimalAppTheme(darkTheme = isDarkMode) {
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
-                    title = { Text("Health data") }, colors = TopAppBarDefaults.topAppBarColors(
+                    title = { Text("Health Data")},
+                    colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         titleContentColor = MaterialTheme.colorScheme.primary
-                    )
+                    ),
+                    actions = {
+                        Box(contentAlignment = Alignment.Center) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Icon(
+                                    imageVector = Icons.Filled.AccountCircle,
+                                    contentDescription = "Account",
+                                    Modifier.padding(top = 12.dp, bottom = 0.dp, end = 16.dp))
+
+                                logins.forEach { login ->
+                                    Text(text = login.ownerName,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier.padding(bottom = 9.dp, top = 0.dp, end = 16.dp))
+                                }
+                            }
+                        }
+                    }
                 )
             },
             bottomBar = {
