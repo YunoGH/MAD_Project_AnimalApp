@@ -1,5 +1,14 @@
 package com.example.animalApp
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -26,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -37,10 +47,13 @@ import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
+
+    CheckNotificationPermission()
 
     var pickedDate by remember{
         mutableStateOf(LocalDate.now())
@@ -65,6 +78,8 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
 
     val dateDialogState = rememberMaterialDialogState()
     val timDialogState = rememberMaterialDialogState()
+
+    val context = LocalContext.current
 
 
     var selectedAppointmentType by remember { mutableStateOf("Vet") }
@@ -150,6 +165,15 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
                 )
                 viewModel.addAppointment(appointment)
                 // Handle form submission here
+
+                scheduleNotification(
+                    context = context,
+                    appointmentType = selectedAppointmentType,
+                    date = pickedDate,
+                    time = pickedTime,
+                    details = appointmentDetails
+                )
+
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
@@ -193,6 +217,42 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
             is24HourClock = true
         ){
             pickedTime = it
+        }
+    }
+}
+
+@SuppressLint("ScheduleExactAlarm")
+fun scheduleNotification(context: Context, appointmentType: String, date: LocalDate, time: LocalTime, details: String) {
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+    val appointmentTime = date.atTime(time)
+    val notificationTime = appointmentTime.minusHours(1)
+    val notificationTimeInMillis = notificationTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+    val intent = Intent(context, NotificationReceiver::class.java).apply {
+        putExtra("title", "$appointmentType Appointment")
+        putExtra("message", "Details: $details - in one hour")
+    }
+    val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+    alarmManager.setExact(AlarmManager.RTC_WAKEUP, notificationTimeInMillis, pendingIntent)
+}
+
+@Composable
+fun CheckNotificationPermission() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13 and above
+        val context = LocalContext.current
+        val permissionLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { isGranted ->
+                if (!isGranted) {
+                    // Handle the case when the permission is not granted
+                }
+            }
+        )
+
+        LaunchedEffect(Unit) {
+            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 }

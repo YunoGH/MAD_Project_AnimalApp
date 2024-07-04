@@ -1,5 +1,8 @@
 package com.example.animalApp
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,5 +27,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        /*
+        val channel = NotificationChannel(
+            "channel_id",
+            "Channel name",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+
+         */
     }
 }
