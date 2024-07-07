@@ -28,9 +28,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -40,21 +37,26 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.animalApp.navigation.Screen
 import com.example.animalApp.ui.theme.AnimalAppTheme
-import com.example.animalApp.viewmodels.SettingsViewModel
 import com.example.animalApp.viewmodels.MainViewModel
+import com.example.animalApp.viewmodels.SettingsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = viewModel(), viewModel1: MainViewModel = viewModel()) {
+fun SettingsScreen(
+    navController: NavController,
+    viewModel: SettingsViewModel = viewModel(),
+    viewModel1: MainViewModel = viewModel()
+) {
     // Collect the current state of isDarkMode from the SettingsViewModel
     val isDarkMode by viewModel.isDarkMode.collectAsState()
     val logins by viewModel1.allLogins.collectAsState()
     var iconClicked = false
 
-
+    // Apply the theme based on isDarkMode state
     AnimalAppTheme(darkTheme = isDarkMode) {
         Scaffold(
             topBar = {
+                // Top AppBar with title and back navigation button
                 TopAppBar(
                     title = { Text("Settings") },
                     navigationIcon = {
@@ -68,10 +70,12 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                 )
             },
             bottomBar = {
+                // Bottom Navigation Bar
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
                 NavigationBar {
+                    // Navigation items for each screen
                     NavigationBarItem(
                         label = { Text("Home") },
                         selected = currentDestination?.hierarchy?.any {
@@ -140,11 +144,13 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                 }
             }
         ) { paddingValues ->
+            // Content of the Scaffold
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
                     .padding(horizontal = 16.dp, vertical = 8.dp) // Adding slight margin to all edges
             ) {
+                // Toggle Dark Mode section
                 Text(
                     text = "Toggle Dark Mode",
                     style = MaterialTheme.typography.titleLarge,
@@ -154,6 +160,7 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    // Label for Dark Mode
                     Text(
                         text = "Dark Mode",
                         modifier = Modifier
@@ -161,16 +168,19 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                             .padding(start = 8.dp)
                     )
                     Spacer(modifier = Modifier.width(16.dp)) // Adding space between text and switch
+                    // Switch for toggling Dark Mode
                     Switch(
                         checked = isDarkMode,
                         onCheckedChange = { viewModel.toggleDarkMode() },
                         modifier = Modifier.padding(end = 8.dp)
                     )
                 }
+                // Delete Userprofile section
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    // Label for Delete Userprofile
                     Text(
                         text = "Delete Userprofile",
                         modifier = Modifier
@@ -178,23 +188,28 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                             .padding(start = 8.dp)
                     )
                     Spacer(modifier = Modifier.width(16.dp)) // Adding space between text and switch
-                    IconButton(modifier = Modifier.size(75.dp)
-                        .padding(start = 10.dp, top = 1.dp, bottom = 1.dp),
+                    IconButton(
+                        modifier = Modifier.size(75.dp).padding(start = 10.dp, top = 1.dp, bottom = 1.dp),
                         onClick = {
+                            // Handle click event
                             iconClicked = true
+                            // Delete user profile data
                             logins.forEach { login ->
-                        val loginToDelete = logins.firstOrNull {
-                            it.ownerName == login.ownerName && it.hashedPassword == login.hashedPassword
-                        }
-                        loginToDelete?.let { viewModel1.deleteLogin(it) }
-                    }
+                                val loginToDelete = logins.firstOrNull {
+                                    it.ownerName == login.ownerName && it.hashedPassword == login.hashedPassword
+                                }
+                                loginToDelete?.let { viewModel1.deleteLogin(it) }
+                            }
+                            // Delete other related data
                             viewModel1.deleteAllPetInfo()
                             viewModel1.deleteAllPetInfo()
                             viewModel1.deleteAllAppointments()
                             viewModel1.deleteAllVetInfo()
+                            // Navigate to login screen
                             navController.navigate(Screen.LoginScreen.route)
-
-                        }) {
+                        }
+                    ) {
+                        // Icon for deleting the user account
                         Icon(
                             modifier = Modifier.size(45.dp),
                             tint = if (iconClicked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
@@ -202,10 +217,8 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                             contentDescription = "delete Account"
                         )
                     }
-
                 }
             }
         }
-
     }
 }
