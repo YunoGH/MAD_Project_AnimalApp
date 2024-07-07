@@ -13,7 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.animalApp.navigation.Navigation
 import com.example.animalApp.ui.theme.AnimalAppTheme
-import com.example.animalApp.viewmodel.SettingsViewModel
+import com.example.animalApp.viewmodels.SettingsViewModel
 
 class MainActivity : ComponentActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()
