@@ -14,6 +14,15 @@ import androidx.core.content.ContextCompat
 import com.example.animalApp.navigation.Navigation
 import com.example.animalApp.ui.theme.AnimalAppTheme
 import com.example.animalApp.viewmodels.SettingsViewModel
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import com.example.animalApp.navigation.Navigation
+import com.example.animalApp.ui.theme.AnimalAppTheme
 
 class MainActivity : ComponentActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()

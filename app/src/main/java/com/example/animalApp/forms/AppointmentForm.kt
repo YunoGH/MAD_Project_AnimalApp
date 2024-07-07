@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.animalApp.NotificationReceiver
 import com.example.animalApp.data.Appointment
@@ -54,7 +56,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
 
     CheckNotificationPermission()
 
-    var pickedDate by remember{
+    var pickedDate by remember {
         mutableStateOf(LocalDate.now())
     }
     var pickedTime by remember {
@@ -76,7 +78,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
     }
 
     val dateDialogState = rememberMaterialDialogState()
-    val timDialogState = rememberMaterialDialogState()
+    val timeDialogState = rememberMaterialDialogState()
 
     val context = LocalContext.current
 
@@ -103,7 +105,6 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
                 Button(
                     onClick = { selectedAppointmentType = type },
                     colors = ButtonDefaults.buttonColors(
-
                         containerColor = if (selectedAppointmentType == type) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.tertiaryContainer,
                     )
                 ) {
@@ -139,7 +140,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
                     LaunchedEffect(interactionSource) {
                         interactionSource.interactions.collect {
                             if (it is PressInteraction.Release) {
-                                timDialogState.show()
+                                timeDialogState.show()
                             }
                         }
                     }
@@ -194,27 +195,27 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
             positiveButton(text = "Ok")
             negativeButton(text = "Cancel")
         }
-    ){
+    ) {
         datepicker(
             initialDate = LocalDate.now(),
             title = "Pick a date"
-        ){
+        ) {
             pickedDate = it
         }
     }
 
     MaterialDialog(
-        dialogState = timDialogState,
+        dialogState = timeDialogState,
         buttons = {
             positiveButton(text = "Ok")
             negativeButton(text = "Cancel")
         }
-    ){
+    ) {
         timepicker(
             initialTime = LocalTime.NOON,
             title = "Pick a date",
             is24HourClock = true
-        ){
+        ) {
             pickedTime = it
         }
     }
@@ -232,7 +233,7 @@ fun scheduleNotification(context: Context, appointmentType: String, date: LocalD
         putExtra("title", "$appointmentType Appointment")
         putExtra("message", "Details: $details - in one hour")
     }
-    val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
     alarmManager.setExact(AlarmManager.RTC_WAKEUP, notificationTimeInMillis, pendingIntent)
 }
