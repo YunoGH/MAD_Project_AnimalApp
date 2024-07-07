@@ -1,4 +1,4 @@
-package com.example.animalApp.viewmodel
+package com.example.animalApp.viewmodels
 
 import android.app.Application
 import android.content.Context

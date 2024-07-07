@@ -1,8 +1,5 @@
 package com.example.animalApp
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import com.example.animalApp.navigation.Navigation
 import com.example.animalApp.ui.theme.AnimalAppTheme
+import com.example.animalApp.viewmodels.SettingsViewModel
 
 class MainActivity : ComponentActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()

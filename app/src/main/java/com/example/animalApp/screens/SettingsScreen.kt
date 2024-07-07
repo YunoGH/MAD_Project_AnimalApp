@@ -40,7 +40,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.animalApp.navigation.Screen
 import com.example.animalApp.ui.theme.AnimalAppTheme
-import com.example.animalApp.viewmodel.SettingsViewModel
+import com.example.animalApp.viewmodels.SettingsViewModel
 import com.example.animalApp.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -186,7 +186,7 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                             iconClicked = true
                             logins.forEach { login ->
                         val loginToDelete = logins.firstOrNull {
-                            it.ownerName == login.ownerName && it.ownerPassword == login.ownerPassword
+                            it.ownerName == login.ownerName && it.hashedPassword == login.hashedPassword
                         }
                         loginToDelete?.let { viewModel1.deleteLogin(it) }
                     }
