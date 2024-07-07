@@ -56,12 +56,15 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
 
     CheckNotificationPermission()
 
+    //Datum das ausgewählt wird
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
     }
+    //Uhrzeit die ausgewählt wird
     var pickedTime by remember {
         mutableStateOf(LocalTime.NOON)
     }
+    //Datum in der richtigen Formatierung
     val formattedDate by remember {
         derivedStateOf {
             DateTimeFormatter
@@ -69,6 +72,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
                 .format(pickedDate)
         }
     }
+    //Uhrzeit in der richtigen Formatierung
     val formattedTime by remember {
         derivedStateOf {
             DateTimeFormatter
@@ -77,6 +81,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
         }
     }
 
+    //Für Datum und Uhrzeit werden Kalender und Uhr geholt
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
 
@@ -117,11 +122,12 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
             value = appointmentDate,
             onValueChange = { appointmentDate = it },
             label = { Text(text = formattedDate) },
-            interactionSource = remember { MutableInteractionSource() }
+            interactionSource = remember { MutableInteractionSource() }        //onClick, aber anders geschreiben, weil es Fehlermeldungen ausgestoßen hat
                 .also { interactionSource ->
                     LaunchedEffect(interactionSource) {
                         interactionSource.interactions.collect {
                             if (it is PressInteraction.Release) {
+                                //Kalender herzeigen
                                 dateDialogState.show()
                             }
                         }
@@ -137,9 +143,10 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
             label = { Text(text = formattedTime) },
             interactionSource = remember { MutableInteractionSource() }
                 .also { interactionSource ->
-                    LaunchedEffect(interactionSource) {
+                    LaunchedEffect(interactionSource) {         //onClick, aber anders geschreiben, weil es Fehlermeldungen ausgestoßen hat
                         interactionSource.interactions.collect {
                             if (it is PressInteraction.Release) {
+                                //Uhr anzeigen
                                 timeDialogState.show()
                             }
                         }
@@ -166,6 +173,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
                 viewModel.addAppointment(appointment)
                 // Handle form submission here
 
+                //Werte für die Benachrichtigung übergeben
                 scheduleNotification(
                     context = context,
                     appointmentType = selectedAppointmentType,
@@ -189,6 +197,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
         }
     }
 
+    //Ist der Kalender der auftaucht
     MaterialDialog(
         dialogState = dateDialogState,
         buttons = {
@@ -204,6 +213,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
         }
     }
 
+    //Ist die Uhr die Auftauht
     MaterialDialog(
         dialogState = timeDialogState,
         buttons = {
@@ -221,14 +231,16 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
     }
 }
 
+//Die Werte die Übergeben werden, werden dafür benutzt um die Benachrichtigung zu erstellen
 @SuppressLint("ScheduleExactAlarm")
 fun scheduleNotification(context: Context, appointmentType: String, date: LocalDate, time: LocalTime, details: String) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     val appointmentTime = date.atTime(time)
+    //1 std vor dem Termin wird eine Benachrichtigung geschickt
     val notificationTime = appointmentTime.minusHours(1)
     val notificationTimeInMillis = notificationTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-
+    //Titel und Nachricht der Benachrichtigung werden übergeben
     val intent = Intent(context, NotificationReceiver::class.java).apply {
         putExtra("title", "$appointmentType Appointment")
         putExtra("message", "Details: $details - $time")
@@ -238,6 +250,7 @@ fun scheduleNotification(context: Context, appointmentType: String, date: LocalD
     alarmManager.setExact(AlarmManager.RTC_WAKEUP, notificationTimeInMillis, pendingIntent)
 }
 
+//Es wird überprüft, ob die Permission für das schicken von Benachrichtigungen akzeptiert wurde
 @Composable
 fun CheckNotificationPermission() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13 and above

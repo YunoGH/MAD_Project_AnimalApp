@@ -17,20 +17,24 @@ import androidx.core.app.NotificationCompat
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        //Hier werden Titel und Nachricht der Benachrichtigung erstellt(Werte sind nur Platzhalter und werden später geändert)
         val title = intent.getStringExtra("title") ?: "Appointment Reminder"
         val message = intent.getStringExtra("message") ?: "You have an upcoming appointment."
-
+        //Noticication service vom System geholt
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        //Namen Vergeben
         val channelId = "appointment_reminder_channel"
         val channelName = "Appointment Reminder"
+        //Priorität gesetzt
         val importance = NotificationManager.IMPORTANCE_HIGH
 
+        //wird nur für Versionen über sdk 28 verwendet
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(channelId, channelName, importance)
             notificationManager.createNotificationChannel(channel)
         }
-
+        //Wird bei versionen > sdk 28 gebraucht
         val notificationIntent = Intent(context, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
             context,
@@ -38,7 +42,7 @@ class NotificationReceiver : BroadcastReceiver() {
             notificationIntent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-
+        //benachrichtigung wird zusammen gebaut
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(title)
