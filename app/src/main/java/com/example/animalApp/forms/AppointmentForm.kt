@@ -72,7 +72,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
     val formattedTime by remember {
         derivedStateOf {
             DateTimeFormatter
-                .ofPattern("hh:mm")
+                .ofPattern("HH:mm")
                 .format(pickedTime)
         }
     }
