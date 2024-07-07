@@ -42,8 +42,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.animalApp.forms.PetForm
 import com.example.animalApp.navigation.Screen
 import com.example.animalApp.ui.theme.AnimalAppTheme
-import com.example.animalApp.viewmodel.SettingsViewModel
 import com.example.animalApp.viewmodels.MainViewModel
+import com.example.animalApp.viewmodels.SettingsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

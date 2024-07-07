@@ -4,7 +4,11 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.animalApp.data.*
+import com.example.animalApp.data.Appointment
+import com.example.animalApp.data.LoginInfo
+import com.example.animalApp.data.PetInfo
+import com.example.animalApp.data.UserDatabase
+import com.example.animalApp.data.VetInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -40,11 +44,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val appointments = appointmentDao.getAllAppointments()
             val vets = vetInfoDao.getAllVetInfo()
 
-            Log.d("MainViewModel", "Logins: $logins")
-            Log.d("MainViewModel", "Pets: $pets")
-            Log.d("MainViewModel", "Appointments: $appointments")
-            Log.d("MainViewModel", "Vets: $vets")
-
             _allLogins.value = logins
             _allPetInfo.value = pets
             _allAppointments.value = appointments
@@ -63,7 +62,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun deleteLogin(loginInfo: LoginInfo) {
         viewModelScope.launch {
-            Log.d("MainViewModel", "Deleting login: $loginInfo")
             loginDao.deleteLogin(loginInfo)
             refreshData()
         }
@@ -82,7 +80,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             refreshData()
         }
     }
-    // Add methods to delete all data from other tables
+
     fun deleteAllPetInfo() {
         viewModelScope.launch {
             petDao.deleteAllPetInfo()
@@ -103,6 +101,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             refreshData()
         }
     }
+
     fun deleteAllAppointments() {
         viewModelScope.launch {
             appointmentDao.deleteAllAppointments()
@@ -123,11 +122,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             refreshData()
         }
     }
+
     fun deleteAllVetInfo() {
         viewModelScope.launch {
             vetInfoDao.deleteAllVetInfo()
             refreshData()
         }
     }
-
 }

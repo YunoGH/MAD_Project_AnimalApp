@@ -1,5 +1,10 @@
 package com.example.animalApp.data
 
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import androidx.room.*
 
 @Dao
@@ -12,6 +17,12 @@ interface LoginDao {
 
     @Query("SELECT * FROM login_info")
     suspend fun getAllLogins(): List<LoginInfo>
+
+    @Query("SELECT * FROM login_info WHERE ownerName = :ownerName")
+    suspend fun getLogin(ownerName: String): LoginInfo?
+
+    @Query("SELECT hashedPassword FROM login_info WHERE ownerName = :ownerName")
+    suspend fun getHashedPassword(ownerName: String): String?
 }
 @Dao
 interface PetDao {
