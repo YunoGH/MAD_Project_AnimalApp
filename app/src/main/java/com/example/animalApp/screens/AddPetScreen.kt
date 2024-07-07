@@ -21,7 +21,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -43,14 +42,14 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.animalApp.PetForm
 import com.example.animalApp.R
+import com.example.animalApp.SettingsViewModel
 import com.example.animalApp.navigation.Screen
 import com.example.animalApp.ui.theme.AnimalAppTheme
-import com.example.animalApp.viewmodel.SettingsViewModel
 import com.example.animalApp.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddPetScreen(navController: NavController, viewModel: MainViewModel = viewModel(), viewModel1: SettingsViewModel = viewModel()) {
+fun AddPetScreen(navController: NavController, viewModel: MainViewModel = viewModel(), viewModel1: SettingsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     val isDarkMode by viewModel1.isDarkMode.collectAsState()
     val pets by viewModel.allPetInfo.collectAsState()
     val logins by viewModel.allLogins.collectAsState()

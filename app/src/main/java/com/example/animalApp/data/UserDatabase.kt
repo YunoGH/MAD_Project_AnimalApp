@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [LoginInfo::class, PetInfo::class, Appointment::class, VetInfo::class], version = 6, exportSchema = false)
+@Database(entities = [LoginInfo::class, PetInfo::class, Appointment::class, VetInfo::class], version = 7, exportSchema = false)
 abstract class UserDatabase : RoomDatabase() {
 
     abstract fun loginDao(): LoginDao
@@ -138,6 +138,21 @@ abstract class UserDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // rename data classes
+                database.execSQL("DROP TABLE login_info")
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS login_info (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        ownerName TEXT NOT NULL,
+                        hashedPassword TEXT NOT NULL,
+                        salt TEXT NOT NULL
+                    )
+                """.trimIndent())
+            }
+        }
+
         fun getDatabase(context: Context): UserDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -146,7 +161,7 @@ abstract class UserDatabase : RoomDatabase() {
                     "user_database"
                 )
                     //.addMigrations(MIGRATION_1_2)
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
                     .build()
                 INSTANCE = instance
                 instance

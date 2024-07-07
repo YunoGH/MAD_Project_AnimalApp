@@ -40,9 +40,9 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.animalApp.HealthDataForm
 import com.example.animalApp.R
+import com.example.animalApp.SettingsViewModel
 import com.example.animalApp.navigation.Screen
 import com.example.animalApp.ui.theme.AnimalAppTheme
-import com.example.animalApp.viewmodel.SettingsViewModel
 import com.example.animalApp.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
