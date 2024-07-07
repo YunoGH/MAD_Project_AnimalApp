@@ -1,9 +1,14 @@
-package com.example.animalApp
+package com.example.animalApp.forms
 
 import android.net.Uri
+import androidx.compose.foundation.Image
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberImagePainter
+import com.example.animalApp.utils.savePhotoToExternalStorage
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,21 +22,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.animalApp.viewmodels.MainViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.animalApp.data.PetInfo
+import com.example.animalApp.utils.getBitmapFromUri
 
 @Composable
 fun PetForm(viewModel: MainViewModel = viewModel()) {
@@ -45,17 +47,18 @@ fun PetForm(viewModel: MainViewModel = viewModel()) {
     var dateOfBirth by remember { mutableStateOf("") }
     var photoUri by remember { mutableStateOf<Uri?>(null)}
 
-    val pets by viewModel.allPetInfo.collectAsState()
+    val context = LocalContext.current
 
     // Image launcher
     val imgLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         if (uri != null) {
-            photoUri = uri
+            val bitmap = getBitmapFromUri(context, uri)
+            val savedUri = savePhotoToExternalStorage(context, bitmap, "pet_photo_${System.currentTimeMillis()}")
+            photoUri = savedUri //turn into img and save
         }
     }
-
 
     Column(
         modifier = Modifier
@@ -90,7 +93,7 @@ fun PetForm(viewModel: MainViewModel = viewModel()) {
         OutlinedTextField(
             value = race,
             onValueChange = { race = it },
-            label = { Text("Race (Optional)") },
+            label = { Text("Breed (Optional)") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -134,7 +137,7 @@ fun PetForm(viewModel: MainViewModel = viewModel()) {
         }
         photoUri?.let { uri ->
             Image(
-                painter = rememberImagePainter(
+                painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(LocalContext.current)
                         .data(uri)
                         .transformations(CircleCropTransformation())
@@ -163,8 +166,7 @@ fun PetForm(viewModel: MainViewModel = viewModel()) {
                           dateOfBirth = dateOfBirth,
                           photoUri = photoUri?.toString()
                       )
-                viewModel.addPetInfo(pet)
-                // Handle form submission here
+                viewModel.addPetInfo(pet) //Submit form to db
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
@@ -172,10 +174,7 @@ fun PetForm(viewModel: MainViewModel = viewModel()) {
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Display saved users
+        // Display saved pets
         Text("Saved Pets:", style = MaterialTheme.typography.headlineMedium)
-        pets.forEach {pet ->
-            Text(pet.name)
-        }
     }
 }

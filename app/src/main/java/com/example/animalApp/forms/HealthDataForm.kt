@@ -1,6 +1,5 @@
-package com.example.animalApp
+package com.example.animalApp.forms
 
-import android.widget.DatePicker
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,36 +27,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.animalApp.data.VetInfo
 import com.example.animalApp.viewmodels.MainViewModel
-import java.util.Calendar
 
 @Composable
 fun HealthDataForm(viewModel: MainViewModel = viewModel()) {
-    var birthDate by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     var selectedVaccine by remember { mutableStateOf("") }
     val vaccines = listOf("Rabies", "Parvovirus", "Distemper", "Hepatitis")
     var animalType by remember { mutableStateOf("") }
     var race by remember { mutableStateOf("") }
     val vetInfo by viewModel.allVetInfo.collectAsState()
-
-    // Date picker dialog
-    val context = LocalContext.current
-    val calendar = Calendar.getInstance()
-    val year = calendar.get(Calendar.YEAR)
-    val month = calendar.get(Calendar.MONTH)
-    val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-    val datePickerDialog = android.app.DatePickerDialog(
-        context,
-        { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-            birthDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-        }, year, month, day
-    )
 
     Column(
         modifier = Modifier
@@ -70,24 +52,16 @@ fun HealthDataForm(viewModel: MainViewModel = viewModel()) {
         OutlinedTextField(
             value = animalType,
             onValueChange = { animalType = it },
-            label = { Text("Animal Type") },
+            label = { Text("Pet's name") },
             modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
             value = race,
             onValueChange = { race = it },
-            label = { Text("Race (Optional)") },
+            label = { Text("Breed (Optional)") },
             modifier = Modifier.fillMaxWidth()
         )
-
-        // Date of Birth Picker
-        Button(
-            onClick = { datePickerDialog.show() },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text(birthDate.ifEmpty { "Select Date of Birth" })
-        }
 
         // Vaccines Dropdown Menu
         Box(
@@ -140,10 +114,10 @@ fun HealthDataForm(viewModel: MainViewModel = viewModel()) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Display saved pet
-        Text("Saved Pets", style = MaterialTheme.typography.headlineMedium)
+        Text("Saved Pet Health Data: ", style = MaterialTheme.typography.headlineMedium)
 
         vetInfo.forEach { vetInfo ->
-            Text("${vetInfo.animalType} - ${vetInfo.race}: ${vetInfo.vaccines}")
+            Text("${vetInfo.animalType} (${vetInfo.race}): Vaccine: ${vetInfo.vaccines}")
         }
     }
 }

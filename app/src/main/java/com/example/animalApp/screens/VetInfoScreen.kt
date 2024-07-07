@@ -1,12 +1,9 @@
 package com.example.animalApp.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -16,7 +13,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,15 +27,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.animalApp.HealthDataForm
-import com.example.animalApp.R
+import com.example.animalApp.forms.HealthDataForm
 import com.example.animalApp.navigation.Screen
 import com.example.animalApp.ui.theme.AnimalAppTheme
 import com.example.animalApp.viewmodel.SettingsViewModel
@@ -170,21 +163,6 @@ fun VetInfoScreen(navController: NavController, viewModel: SettingsViewModel = v
                 )
 
                 HealthDataForm()
-
-                Card(
-                    modifier = Modifier
-                        .width(250.dp)
-                        .height(350.dp)
-                        .padding(10.dp)
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .padding(10.dp),
-                        painter = painterResource(id = R.drawable.hund),
-                        contentDescription = "Doggy",
-                        contentScale = ContentScale.FillWidth
-                    )
-                }
             }
         }
     }

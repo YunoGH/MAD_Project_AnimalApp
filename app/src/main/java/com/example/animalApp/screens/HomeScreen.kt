@@ -5,10 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -18,11 +17,9 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -35,15 +32,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.animalApp.R
+import coil.compose.rememberAsyncImagePainter
 import com.example.animalApp.navigation.Screen
 import com.example.animalApp.ui.theme.AnimalAppTheme
 import com.example.animalApp.viewmodel.SettingsViewModel
@@ -161,7 +156,7 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel = viewMode
                 modifier = Modifier
                     .verticalScroll(scrollState)
                     .padding(innerPadding),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
@@ -173,46 +168,47 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel = viewMode
                         You're also free to change the appearance of this App in the settings.
                     """.trimIndent(),
                 )
-                logins.forEach { login ->
+                /*logins.forEach { login ->
                     Column(modifier = Modifier.padding(bottom = 16.dp)) {
                         Text(
                             text = "User: ${login.ownerName}",
                             style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp)
                         )
                     }
-                }
+                }*/
 
-                Text("Saved Pets:", style = MaterialTheme.typography.headlineMedium)
-
-                pets.forEach { pet ->
-                    Column(modifier = Modifier.padding(bottom = 16.dp)) {
+                    Text(
+                        "Saved Pets:",
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                    pets.forEach { pet ->
+                    Column(modifier = Modifier.padding(bottom = 16.dp, start = 8.dp)) {
                         Text(
                             text = "Pet's Name: ${pet.name}",
                             style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp)
                         )
+                        pet.photoUri?.let { uri ->
+                            Image(
+                                painter = rememberAsyncImagePainter(uri),
+                                contentDescription = "Pet photo",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .height(200.dp)
+                                    .fillMaxWidth()
+                                    .padding(10.dp)
+                            )
+                        }
                         Text("Pet's Age: ${pet.age}")
                         Text("Animal Type: ${pet.animalType}")
-                        Text("Race: ${pet.race ?: "Unknown"}")
+                        Text("Breed: ${pet.race ?: "Unknown"}")
                         Text("Color: ${pet.color}")
                         Text("Sex: ${pet.sex}")
                         Text("Eye Color: ${pet.eyeColor}")
                         Text("Birthday: ${pet.dateOfBirth}")
-                        Text("Pet Photo: ")
+                        //Text("Pet Photo: ${pet.photoUri}") for testing
                         Spacer(modifier = Modifier.height(8.dp))
                     }
-                }
-                Card(
-                    modifier = Modifier
-                        .width(250.dp)
-                        .height(350.dp)
-                        .padding(10.dp)
-                ) {
-                    Image(
-                        modifier = Modifier.padding(10.dp),
-                        painter = painterResource(id = R.drawable.hund),
-                        contentDescription = "Doggy",
-                        contentScale = ContentScale.FillWidth
-                    )
                 }
             }
         }

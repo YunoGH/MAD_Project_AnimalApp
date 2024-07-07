@@ -1,7 +1,6 @@
 package com.example.animalApp.data
 
 import androidx.room.*
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LoginDao {

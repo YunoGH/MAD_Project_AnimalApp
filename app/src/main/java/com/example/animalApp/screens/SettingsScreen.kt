@@ -48,8 +48,6 @@ import com.example.animalApp.viewmodels.MainViewModel
 fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = viewModel(), viewModel1: MainViewModel = viewModel()) {
     // Collect the current state of isDarkMode from the SettingsViewModel
     val isDarkMode by viewModel.isDarkMode.collectAsState()
-    var ownerName by remember { mutableStateOf("") }
-    var ownerPassword by remember { mutableStateOf("") }
     val logins by viewModel1.allLogins.collectAsState()
     var iconClicked = false
 
@@ -193,6 +191,7 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                             viewModel1.deleteAllPetInfo()
                             viewModel1.deleteAllPetInfo()
                             viewModel1.deleteAllAppointments()
+                            viewModel1.deleteAllVetInfo()
                             navController.navigate(Screen.LoginScreen.route)
 
                         }) {
