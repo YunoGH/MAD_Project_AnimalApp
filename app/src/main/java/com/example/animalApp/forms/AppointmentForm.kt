@@ -231,7 +231,7 @@ fun scheduleNotification(context: Context, appointmentType: String, date: LocalD
 
     val intent = Intent(context, NotificationReceiver::class.java).apply {
         putExtra("title", "$appointmentType Appointment")
-        putExtra("message", "Details: $details - in one hour")
+        putExtra("message", "Details: $details - $time")
     }
     val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
