@@ -104,8 +104,7 @@ fun HealthDataForm(viewModel: MainViewModel = viewModel()) {
                     race = race,
                     vaccines = selectedVaccine
                 )
-                viewModel.addVetInfo(vetInfo)
-                // Handle form submission here
+                viewModel.addVetInfo(vetInfo) //submit form
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
@@ -118,6 +117,6 @@ fun HealthDataForm(viewModel: MainViewModel = viewModel()) {
 
         vetInfo.forEach { vetInfo ->
             Text("${vetInfo.animalType} (${vetInfo.race}): Vaccine: ${vetInfo.vaccines}")
-        }
+        } //print infos
     }
 }

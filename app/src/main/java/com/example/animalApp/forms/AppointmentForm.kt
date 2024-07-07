@@ -85,7 +85,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
 
-    val context = LocalContext.current
+    val context = LocalContext.current //tool for accessing system services: notifications
 
 
     var selectedAppointmentType by remember { mutableStateOf("Vet") }
@@ -107,7 +107,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             appointmentTypes.forEach { type ->
-                Button(
+                Button( //Buttons for choosing appointment type
                     onClick = { selectedAppointmentType = type },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (selectedAppointmentType == type) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.tertiaryContainer,
@@ -170,8 +170,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
                     time = formattedTime,
                     details = appointmentDetails
                 )
-                viewModel.addAppointment(appointment)
-                // Handle form submission here
+                viewModel.addAppointment(appointment) //submit to database
 
                 //Werte für die Benachrichtigung übergeben
                 scheduleNotification(
@@ -192,7 +191,7 @@ fun AppointmentForm(viewModel: MainViewModel = viewModel()) {
         // Display saved appointments
         Text("Appointments", style = MaterialTheme.typography.headlineMedium)
 
-        appointments.forEach { appointment ->
+        appointments.forEach { appointment -> //print appointment
             Text("${appointment.appointmentType} - ${appointment.date}(${appointment.time}): ${appointment.details}")
         }
     }

@@ -70,7 +70,7 @@ fun AddPetScreen(navController: NavController, viewModel: MainViewModel = viewMo
                                     contentDescription = "Account",
                                     Modifier.padding(top = 12.dp, bottom = 0.dp, end = 16.dp))
 
-                                logins.forEach { login ->
+                                logins.forEach { login -> //icon with username
                                     Text(text = login.ownerName,
                                         style = MaterialTheme.typography.bodyMedium,
                                         modifier = Modifier.padding(bottom = 9.dp, top = 0.dp, end = 16.dp))
@@ -170,14 +170,14 @@ fun AddPetScreen(navController: NavController, viewModel: MainViewModel = viewMo
     
                     """.trimIndent(),
                 )
-                PetForm()
-                pets.forEach { pet ->
+                PetForm() //user input form
+                pets.forEach { pet -> //print all inputs
                     Column(modifier = Modifier.padding(bottom = 16.dp, start = 16.dp)) {
                         Text(
                             text = "Pet's Name: ${pet.name}",
                             style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp)
                         )
-                        pet.photoUri?.let { uri -> //get image
+                        pet.photoUri?.let { uri -> //call function with users input photo uri
                             Image(
                                 painter = rememberAsyncImagePainter(uri),
                                 contentDescription = "Pet photo",

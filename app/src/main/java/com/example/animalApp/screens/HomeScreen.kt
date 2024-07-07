@@ -172,18 +172,18 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel = viewMode
                 /*logins.forEach { login ->
                     Column(modifier = Modifier.padding(bottom = 16.dp)) {
                         Text(
-                            text = "User: ${login.ownerName}",
+                            text = "User: ${login.username}",
                             style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp)
                         )
                     }
-                }*/
+                } //for implementing multiple Users*/
 
                     Text(
                         "Saved Pets:",
                         style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier.padding(8.dp)
                     )
-                    pets.forEach { pet ->
+                    pets.forEach { pet -> // prints pets from db with photo
                     Column(modifier = Modifier.padding(bottom = 16.dp, start = 8.dp)) {
                         Text(
                             text = "Pet's Name: ${pet.name}",
@@ -199,7 +199,7 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel = viewMode
                                     .fillMaxWidth()
                                     .padding(10.dp)
                             )
-                        }
+                        } //Access databases details
                         Text("Pet's Age: ${pet.age}")
                         Text("Animal Type: ${pet.animalType}")
                         Text("Breed: ${pet.race ?: "Unknown"}")

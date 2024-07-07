@@ -55,7 +55,7 @@ fun PetForm(viewModel: MainViewModel = viewModel()) {
     ) { uri: Uri? ->
         if (uri != null) {
             val bitmap = getBitmapFromUri(context, uri)
-            val savedUri = savePhotoToExternalStorage(context, bitmap, "pet_photo_${System.currentTimeMillis()}")
+            val savedUri = savePhotoToExternalStorage(context, bitmap, "pet_photo_${System.currentTimeMillis()}")//create filename
             photoUri = savedUri //turn into img and save
         }
     }

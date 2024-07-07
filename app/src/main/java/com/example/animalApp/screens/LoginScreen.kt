@@ -88,7 +88,7 @@ fun LoginScreen(
                 BottomAppBar {
                     Spacer(modifier = Modifier.weight(1f)) // Push the button to the right
                     if (logins.isNotEmpty()) {
-                        Button(
+                        Button( //remove data from database and from screen
                             onClick = {
                                 logins.forEach { login ->
                                     val loginToDelete = logins.firstOrNull {
@@ -119,7 +119,7 @@ fun LoginScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (logins.isEmpty()) {
+                if (logins.isEmpty()) { //if there is no user add a new user
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "Welcome to your Animal Manager App!",
@@ -160,7 +160,7 @@ fun LoginScreen(
                                     hashedPassword = hashedPassword,
                                     salt = salt
                                 )
-                                viewModel.addLogin(login)
+                                viewModel.addLogin(login) //add user to db
 
                                 // Log the hashed password
                                 Log.d("LoginScreen", "Hashed Password: $hashedPassword")
@@ -180,7 +180,7 @@ fun LoginScreen(
                         style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
-                    logins.forEach { login ->
+                    logins.forEach { login -> // for further use of multiple user logins - not used yet
                         Text(
                             text = login.ownerName,
                             style = MaterialTheme.typography.headlineLarge,

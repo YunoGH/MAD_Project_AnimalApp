@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        requestStoragePermissions()
+        requestStoragePermissions() //for saving users photos in app
 
         /*
         val channel = NotificationChannel(
@@ -50,16 +50,18 @@ class MainActivity : ComponentActivity() {
 
          */
     }
+    // Function to request storage permissions if not already granted
     private fun requestStoragePermissions() {
+        // Array of required permissions for reading and writing external storage
         val permissions = arrayOf(
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
-
+        // Filter out the permissions that are not yet given
         val permissionsToRequest = permissions.filter {
             ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
         }
-
+        // If permissions are needed, request them
         if (permissionsToRequest.isNotEmpty()) {
             ActivityCompat.requestPermissions(this, permissionsToRequest.toTypedArray(), 0)
         }
